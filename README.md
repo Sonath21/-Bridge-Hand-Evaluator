@@ -87,31 +87,67 @@ Bridge is played with a standard deck of 52 cards, divided into four suits: spad
 Here is an example of the main code structure:
 
 ```c
-#include <stdio.h>
-#include <stdbool.h>
-
-typedef struct {
-    char rank;
-    char suit;
-} Card;
-
-typedef struct {
-    Card cards[13];
-} Hand;
-
-int readFromInput(Hand hands[]);
-void printHand(Hand hand);
-bool balanced(Hand hand);
-int hcp(Hand hand);
-int declarer(Hand hand);
-void response(Hand hand);
+#include "bridge.h"
 
 int main() {
-    Hand hands[10];
-    int numHands = readFromInput(hands);
+    Hand hands[4];
+    int numHands;
+
+    // Test readFromInput function
+    printf("Enter number of hands and hand details (rank and suit for 13 cards each):\n");
+    numHands = readFromInput(hands);
+    printf("Read %d hands from input.\n", numHands);
+
+    // Test printHand function
     for (int i = 0; i < numHands; i++) {
+        printf("Hand %d:\n", i + 1);
         printHand(hands[i]);
+    }
+
+    // Test balanced function
+    for (int i = 0; i < numHands; i++) {
+        if (balanced(hands[i])) {
+            printf("Hand %d is balanced.\n", i + 1);
+        } else {
+            printf("Hand %d is not balanced.\n", i + 1);
+        }
+    }
+
+    // Test hcp function
+    for (int i = 0; i < numHands; i++) {
+        printf("Hand %d HCP: %d\n", i + 1, hcp(hands[i]));
+    }
+
+    // Test declarer function
+    for (int i = 0; i < numHands; i++) {
+        printf("Hand %d Distribution Points: %d\n", i + 1, declarer(hands[i]));
+    }
+
+    // Test response function
+    for (int i = 0; i < numHands; i++) {
+        printf("Response for Hand %d: ", i + 1);
         response(hands[i]);
     }
+
+    // Test saveData function
+    printf("Enter file name to save the hands: ");
+    saveData(hands, numHands);
+    printf("Hands saved to file.\n");
+
+    // Test readFromFile function
+    printf("Enter file name to read the hands from: ");
+    numHands = readFromFile(hands);
+    if (numHands > 0) {
+        printf("Read %d hands from file.\n", numHands);
+        for (int i = 0; i < numHands; i++) {
+            printf("Hand %d:\n", i + 1);
+            printHand(hands[i]);
+        }
+    } else {
+        printf("Failed to read hands from file.\n");
+    }
+
     return 0;
+}
+
 }
